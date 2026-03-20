@@ -1,0 +1,14 @@
+---
+- name: Verificar estado del servicio SSH
+  hosts: all
+  become: yes
+  tasks:
+    - name: Comprobar si el servicio sshd está activo
+      ansible.builtin.service_facts:
+
+    - name: Mostrar estado del servicio sshd
+      debug:
+        msg: >
+          El servicio sshd está {{
+            (services['sshd'].state if 'sshd' in services else 'no encontrado')
+          }}
