@@ -5,9 +5,20 @@
   tasks:
     - name: Obtener espacio en disco C con PowerShell
       ansible.windows.win_shell: |
-        Get-PSDrive C | Select-Object Used,Free, @{Name="Total";Expression={$_.Used + $_.Free}}
+        $drive = Get-PSDrive C
+        @{
+          "Disco" = $drive.Name
+          "Libre (GB)" = "{0:N2}" -f ($drive.Free/1GB)
+          "Usado (GB)" = "{0:N2}" -f ($drive.Used/1GB)
+          "Total (GB)" = "{0:N2}" -f (($drive.Free + $drive.Used)/1GB)
+        } | ConvertTo-Json
       register: disk_c
 
-    - name: Mostrar resultado
+    - name: Mostrar reporte de espacio en disco C
       debug:
-        var: disk_c.stdout_lines
+        msg: |
+          Reporte de Disco C:
+          -------------------
+          Libre: {{ (disk_c.stdout | from_json)["Libre (GB)"] }} GB
+          Usado: {{ (disk_c.stdout | from_json)["Usado (GB)"] }} GB
+          Total: {{ (disk_c.stdout | from_json)["Total (GB)"] }} GB
