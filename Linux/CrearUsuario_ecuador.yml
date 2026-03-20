@@ -1,0 +1,11 @@
+---
+- name: Crear usuario ecuador en Linux
+  hosts: all
+  become: yes
+  tasks:
+    - name: Crear usuario ecuador
+      ansible.builtin.user:
+        name: ecuador
+        state: present
+        shell: /bin/bash
+        create_home: yes
