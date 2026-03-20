@@ -1,0 +1,23 @@
+---
+- name: Verificar espacio en disco en Windows
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Obtener información de discos
+      ansible.windows.win_disk_facts:
+
+    - name: Mostrar espacio disponible en C:
+      debug:
+        msg: >
+          "El disco C: tiene {{
+            (ansible_facts.disks | selectattr('letter','equalto','C') | first).size_free // (1024*1024*1024)
+          }} GB libres de {{
+            (ansible_facts.disks | selectattr('letter','equalto','C') | first).size // (1024*1024*1024)
+          }} GB totales."
+
+    - name: Mostrar espacio disponible en raíz (C:\)
+      debug:
+        msg: >
+          "El espacio libre en C:\ es {{
+            (ansible_facts.disks | selectattr('letter','equalto','C') | first).size_free // (1024*1024*1024)
+          }} GB."
