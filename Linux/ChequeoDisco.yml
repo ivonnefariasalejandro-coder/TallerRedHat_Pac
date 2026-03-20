@@ -11,11 +11,4 @@
       debug:
         var: root_space.stdout_lines
 
-    - name: Mostrar espacio disponible en /mnt/c
-      command: df -h /mnt/c
-      register: c_space
-      ignore_errors: yes   # en caso de que no exista /mnt/c
-
-    - name: Mostrar resultado de espacio en /mnt/c
-      debug:
-        var: c_space.stdout_lines
+    
